@@ -9,6 +9,7 @@ return [
     'tables_missing' => 'Backup Manager tables are missing. Run the application migrations first.',
     'states' => ['dirty' => 'Backup required', 'clean' => 'Up to date'],
     'statuses' => ['running' => 'Running', 'successful' => 'Successful', 'failed' => 'Failed'],
+    'pagination' => ['label' => 'Pagination', 'previous' => 'Previous page', 'next' => 'Next page'],
     'sources' => [
         'title' => 'Sources', 'source' => 'Source', 'type' => 'Type', 'state' => 'State',
         'last_change' => 'Last change', 'last_attempt' => 'Last attempt', 'last_success' => 'Last success',

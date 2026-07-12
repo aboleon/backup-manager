@@ -56,6 +56,7 @@ final class BackupDashboardTest extends TestCase
             ->assertSee('Upload failed')
             ->assertSee('&lt;script&gt;alert(1)&lt;/script&gt;', false)
             ->assertDontSee('<script>alert(1)</script>', false)
+            ->assertSee('class="pagination"', false)
             ->assertSee('?page=2', false);
     }
 }

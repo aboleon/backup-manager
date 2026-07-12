@@ -9,6 +9,7 @@ return [
     'tables_missing' => 'Les tables du gestionnaire de sauvegardes sont absentes. Exécutez d’abord les migrations de l’application.',
     'states' => ['dirty' => 'Sauvegarde requise', 'clean' => 'À jour'],
     'statuses' => ['running' => 'En cours', 'successful' => 'Réussie', 'failed' => 'Échouée'],
+    'pagination' => ['label' => 'Pagination', 'previous' => 'Page précédente', 'next' => 'Page suivante'],
     'sources' => [
         'title' => 'Sources', 'source' => 'Source', 'type' => 'Type', 'state' => 'État',
         'last_change' => 'Dernière modification', 'last_attempt' => 'Dernière tentative', 'last_success' => 'Dernier succès',

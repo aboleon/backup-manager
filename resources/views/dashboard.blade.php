@@ -95,7 +95,7 @@
                 </table>
             </div>
 
-            {{ $runs->links() }}
+            {{ $runs->onEachSide(1)->links('backup-manager::pagination') }}
         </section>
     </div>
 @endsection
