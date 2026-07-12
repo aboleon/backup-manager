@@ -223,6 +223,30 @@ php artisan backup-manager:mark-database-changed
 
 The run command returns a non-zero exit code when any configured source fails.
 
+## Read-only dashboard
+
+The optional dashboard displays source freshness, the latest source error, and paginated backup run history. It never starts, deletes, or restores backups.
+
+The dashboard is disabled by default. Enable it in the published configuration and protect it with middleware appropriate to the consuming application:
+
+```php
+'ui' => [
+    'enabled' => env('BACKUP_MANAGER_UI_ENABLED', false),
+    'path' => 'admin/backup-manager',
+    'middleware' => ['web', 'auth'],
+    'layout' => 'layouts.app',
+    'per_page' => 25,
+],
+```
+
+Then set:
+
+```dotenv
+BACKUP_MANAGER_UI_ENABLED=true
+```
+
+The named route is `backup-manager.index`. The package includes a standalone Bootstrap layout at `backup-manager::layout`; set `layout` to the consuming application's authenticated layout to integrate the dashboard into an existing administration panel. Add authorization middleware such as an administrator role or ability in addition to `auth` when the dashboard must be restricted further.
+
 ## Restoring
 
 Backup Manager currently creates and transports backups; it does not automatically overwrite or restore application data.

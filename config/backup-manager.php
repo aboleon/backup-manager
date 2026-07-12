@@ -58,6 +58,14 @@ return [
 
     'temporary_directory' => storage_path('app/backup-manager'),
 
+    'ui' => [
+        'enabled' => false,
+        'path' => 'backup-manager',
+        'middleware' => ['web', 'auth'],
+        'layout' => 'backup-manager::layout',
+        'per_page' => 25,
+    ],
+
     'schedule' => [
         'enabled' => env('BACKUP_MANAGER_SCHEDULE_ENABLED', false),
         'time' => env('BACKUP_MANAGER_SCHEDULE_TIME', '23:30'),

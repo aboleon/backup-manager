@@ -11,6 +11,7 @@ use Aboleon\BackupManager\Contracts\BackupDestination;
 use Aboleon\BackupManager\Contracts\DatabaseDumper;
 use Aboleon\BackupManager\Contracts\ProcessRunner;
 use Aboleon\BackupManager\Destinations\GoogleDriveConfig;
+use Aboleon\BackupManager\Http\Controllers\BackupDashboardController;
 use Aboleon\BackupManager\State\BackupRunRepository;
 use Aboleon\BackupManager\State\BackupStateRepository;
 use Aboleon\BackupManager\Support\SymfonyProcessRunner;
@@ -24,6 +25,7 @@ use Illuminate\Foundation\Http\Events\RequestHandled;
 use Illuminate\Queue\Events\JobExceptionOccurred;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use RuntimeException;
 
@@ -59,6 +61,8 @@ final class BackupManagerServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadTranslationsFrom(__DIR__.'/../lang', 'backup-manager');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'backup-manager');
 
         if ($this->app->runningInConsole()) {
             $this->commands([
@@ -73,7 +77,19 @@ final class BackupManagerServiceProvider extends ServiceProvider
         }
 
         $this->registerWriteTracking();
+        $this->registerUi();
         $this->registerSchedule();
+    }
+
+    private function registerUi(): void
+    {
+        if (! (bool) config('backup-manager.ui.enabled', false)) {
+            return;
+        }
+
+        Route::middleware((array) config('backup-manager.ui.middleware', ['web', 'auth']))
+            ->get((string) config('backup-manager.ui.path', 'backup-manager'), BackupDashboardController::class)
+            ->name('backup-manager.index');
     }
 
     private function registerWriteTracking(): void

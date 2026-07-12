@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Aboleon\BackupManager\State;
 
 use Aboleon\BackupManager\Models\BackupRun;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 
 final class BackupRunRepository
@@ -44,6 +45,15 @@ final class BackupRunRepository
             'error' => $error,
             'completed_at' => now(),
         ])->save();
+    }
+
+    /** @return LengthAwarePaginator<int, BackupRun> */
+    public function paginate(int $perPage): LengthAwarePaginator
+    {
+        return $this->query()
+            ->latest('started_at')
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     /** @return Builder<BackupRun> */
