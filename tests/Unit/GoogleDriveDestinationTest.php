@@ -39,6 +39,52 @@ final class GoogleDriveDestinationTest extends TestCase
         ], $runner->runs[0]['command']);
     }
 
+    public function test_it_creates_the_archive_root_before_pruning(): void
+    {
+        $runner = new FakeProcessRunner;
+        $destination = new GoogleDriveDestination($runner, new GoogleDriveConfig(
+            binary: 'rclone',
+            config: null,
+            remote: 'google-drive',
+            root: 'site-backups',
+            timeout: 600,
+            transfers: 3,
+        ));
+
+        $destination->prune('media-archive/project', 30);
+
+        $this->assertSame([
+            'rclone',
+            'mkdir',
+            'google-drive:site-backups/media-archive/project',
+        ], $runner->runs[0]['command']);
+        $this->assertSame([
+            'rclone',
+            'delete',
+            'google-drive:site-backups/media-archive/project',
+            '--min-age',
+            '30d',
+            '--rmdirs',
+        ], $runner->runs[1]['command']);
+    }
+
+    public function test_it_skips_pruning_when_retention_is_disabled(): void
+    {
+        $runner = new FakeProcessRunner;
+        $destination = new GoogleDriveDestination($runner, new GoogleDriveConfig(
+            binary: 'rclone',
+            config: null,
+            remote: 'google-drive',
+            root: 'site-backups',
+            timeout: 600,
+            transfers: 3,
+        ));
+
+        $destination->prune('media-archive/project', 0);
+
+        $this->assertSame([], $runner->runs);
+    }
+
     public function test_it_rejects_an_invalid_remote_name(): void
     {
         $this->expectException(InvalidArgumentException::class);

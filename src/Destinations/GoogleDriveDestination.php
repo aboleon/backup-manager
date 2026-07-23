@@ -49,6 +49,11 @@ final class GoogleDriveDestination implements BackupDestination
         }
 
         $this->runner->run(
+            $this->command('mkdir', [$this->remotePath($remotePath)]),
+            $this->config->timeout,
+        );
+
+        $this->runner->run(
             $this->command('delete', [
                 $this->remotePath($remotePath),
                 '--min-age',
